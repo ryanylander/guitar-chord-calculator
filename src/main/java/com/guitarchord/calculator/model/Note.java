@@ -1,7 +1,10 @@
 package com.guitarchord.calculator.model;
 
+import java.security.InvalidParameterException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public enum Note {
 
@@ -18,10 +21,18 @@ public enum Note {
     G(11), 
     GSHARP(12), AFLAT(12);
 
-    private static Map<Integer, Note> map = new HashMap();
+    private static Map<Integer, Set<Note>> map = new HashMap();
     static {
         for (Note note : Note.values()) {
-            map.put(note.residue, note);
+            if (null == map.get(note.residue)) {
+                Set<Note> enharmonicNotes = new HashSet<>();
+                enharmonicNotes.add(note);
+                map.put(note.residue, enharmonicNotes);
+            } else {
+                Set<Note> enharmonicNotes = map.get(note.residue);
+                enharmonicNotes.add(note);
+                map.put(note.residue, enharmonicNotes);
+            }
         }
     }
 
@@ -32,10 +43,11 @@ public enum Note {
     }
 
     public static Note valueOf(int residue) {
-        return map.get(residue);
+        if (residue < 1 || residue > 12) {
+            throw new InvalidParameterException("There are only 12 notes in western music theory");
+        }
+        return map.get(residue).stream().findAny().orElse(null);
     }
-
-    //int index -> used to provide order so that letters don't become too cumbersome
 
     public Note enharmonic() {
         switch(this) {

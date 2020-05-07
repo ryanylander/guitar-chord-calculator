@@ -9,12 +9,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller("/chord")
 public class ChordController {
 
     @RequestMapping(value = "/get", method = RequestMethod.GET)
-    public Chord getChord(@RequestParam Note root, @RequestParam ChordQuality chordQuality) {
+    public @ResponseBody Chord getChord(@RequestParam Note root, @RequestParam ChordQuality chordQuality) {
         return ChordOperations.buildChord(root, chordQuality);
     }
     
