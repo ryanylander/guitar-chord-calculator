@@ -44,7 +44,7 @@ public class ChordOperations {
     }
 
     private static Note generateFifth(Note root, ChordQuality chordQuality) {
-        DegreeQuality degreeQuality = chordQuality.getQuality(ChordDegree.THIRD);
+        DegreeQuality degreeQuality = chordQuality.getQuality(ChordDegree.FIFTH);
         int halfStepsAboveRoot = 0; //-1? -infinity?
 
         switch (degreeQuality) {
@@ -64,7 +64,7 @@ public class ChordOperations {
     }
 
     private static Note generateSeventh(Note root, ChordQuality chordQuality) {
-        DegreeQuality degreeQuality = chordQuality.getQuality(ChordDegree.THIRD);
+        DegreeQuality degreeQuality = chordQuality.getQuality(ChordDegree.SEVENTH);
         int halfStepsAboveRoot = 0; //-1? -infinity?
 
         switch (degreeQuality) {
@@ -87,7 +87,7 @@ public class ChordOperations {
     }
 
     private static Note generateNinth(Note root, ChordQuality chordQuality) {
-        DegreeQuality degreeQuality = chordQuality.getQuality(ChordDegree.THIRD);
+        DegreeQuality degreeQuality = chordQuality.getQuality(ChordDegree.NINTH);
         int halfStepsAboveRoot = 0; //-1? -infinity?
 
         switch (degreeQuality) {
