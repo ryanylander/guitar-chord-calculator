@@ -42,7 +42,7 @@ public enum Note {
         this.residue = residue;
     }
 
-    public static Note valueOf(int residue) {
+    public static Note valueOf(int residue) { //TODO these should support key-appropriate enharmonics
         if (residue < 1 || residue > 12) {
             throw new InvalidParameterException("There are only 12 notes in western music theory");
         }

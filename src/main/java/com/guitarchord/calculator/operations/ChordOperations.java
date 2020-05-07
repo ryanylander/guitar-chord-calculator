@@ -1,6 +1,8 @@
 package com.guitarchord.calculator.operations;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import com.guitarchord.calculator.model.Chord;
 import com.guitarchord.calculator.model.ChordDegree;
@@ -22,6 +24,55 @@ public class ChordOperations {
         setDegreeIfNonNull(generateThirteenth(root, chordQuality), ChordDegree.THIRTEENTH, chord);
         chord.setDegreeOfLowestNoteInChordInversion(ChordDegree.ROOT);
         return chord;
+    }
+
+    public static Set<Chord> getAllInversions(Note root, ChordQuality chordQuality) {
+        Chord rootPositionChord = buildChord(root, chordQuality);
+        int numPossibleInversions = getNumPossibleInversions(rootPositionChord);
+        Set<Chord> allInversions = new HashSet<>();
+        allInversions.add(rootPositionChord);
+        for (int i = 1; i <= numPossibleInversions; i++) {
+            //'i' is the index of the degree of the chord if we arranged them as an array.
+            Chord newInversion = buildChord(root, chordQuality);
+            switch(i) {
+                case 1:
+                    newInversion.setDegreeOfLowestNoteInChordInversion(ChordDegree.THIRD);
+                    allInversions.add(newInversion);
+                    break;
+                case 2:
+                    newInversion.setDegreeOfLowestNoteInChordInversion(ChordDegree.FIFTH);
+                    allInversions.add(newInversion);
+                    break;
+                case 3:
+                    newInversion.setDegreeOfLowestNoteInChordInversion(ChordDegree.SEVENTH);
+                    allInversions.add(newInversion);
+                    break;
+                case 4:
+                    newInversion.setDegreeOfLowestNoteInChordInversion(ChordDegree.NINTH);
+                    allInversions.add(newInversion);
+                    break;
+                case 5:
+                    newInversion.setDegreeOfLowestNoteInChordInversion(ChordDegree.ELEVENTH);
+                    allInversions.add(newInversion);
+                    break;
+                case 6:
+                    newInversion.setDegreeOfLowestNoteInChordInversion(ChordDegree.THIRTEENTH);
+                    allInversions.add(newInversion);
+                    break;
+                default:
+                    throw new UnsupportedOperationException("There can be a max of 6 unique degrees in a chord.");
+            }
+        }
+        return allInversions;
+    }
+
+    private static int getNumPossibleInversions(Chord chord) {
+        //Assume all chord degrees below the first null degree have values.
+        if (null == chord.getSeventh()) return 2;
+        if (null == chord.getNinth()) return 3;
+        if (null == chord.getEleventh()) return 4;
+        if (null == chord.getThirteenth()) return 5;
+        return 6;
     }
 
     private static void setDegreeIfNonNull(Note note, ChordDegree degree, Chord chord){
