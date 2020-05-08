@@ -12,6 +12,5 @@ public class Chord {
     private Note eleventh;
     private Note thirteenth;
     private ChordQuality quality;
-
     private ChordDegree degreeOfLowestNoteInChordInversion;
 }

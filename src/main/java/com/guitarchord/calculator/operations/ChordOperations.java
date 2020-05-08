@@ -1,5 +1,6 @@
 package com.guitarchord.calculator.operations;
 
+import java.security.InvalidParameterException;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -64,6 +65,39 @@ public class ChordOperations {
             }
         }
         return allInversions;
+    }
+
+    public static Note getDegree(Chord chord, ChordDegree degree) {
+        Note note = null;
+        switch (degree) {
+            case ROOT:
+                note = chord.getRoot();
+                break;
+            case THIRD:
+                note = chord.getThird();
+                break;
+            case FIFTH:
+                note = chord.getFifth();
+                break;
+            case SEVENTH:
+                note = Optional.ofNullable(chord.getSeventh()).orElse(null);
+                break;
+            case NINTH:
+                note = Optional.ofNullable(chord.getNinth()).orElse(null);
+                break;
+            case ELEVENTH:
+                note = Optional.ofNullable(chord.getEleventh()).orElse(null);
+                break;
+            case THIRTEENTH:
+                note = Optional.ofNullable(chord.getThirteenth()).orElse(null);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unrecognized chord degree");
+        }
+        if (null == note) {
+            throw new InvalidParameterException("Tried to retrieve chord degree that does not exist for this chord quality");
+        }
+        return note;
     }
 
     private static int getNumPossibleInversions(Chord chord) {
