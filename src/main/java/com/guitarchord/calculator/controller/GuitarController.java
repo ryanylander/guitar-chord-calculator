@@ -10,18 +10,19 @@ import com.guitarchord.calculator.model.Note;
 import com.guitarchord.calculator.operations.TabOperations;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller("/guitar")
+@RestController
+@RequestMapping("/guitar")
 public class GuitarController {
 
     @Autowired
     private ChordController chordController;
 
-    @RequestMapping(value = "/tab/get", method = RequestMethod.GET)
+    @RequestMapping(value = "/tab", method = RequestMethod.GET)
     public @ResponseBody Set<GuitarChordTab> getChordTablature(Note root, ChordQuality chordQuality) {
         Set<GuitarChordTab> validTabs = new HashSet<>();
         Set<Chord> validInversions = chordController.getAllInversions(root, chordQuality);

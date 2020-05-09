@@ -7,13 +7,14 @@ import com.guitarchord.calculator.model.ChordQuality;
 import com.guitarchord.calculator.model.Note;
 import com.guitarchord.calculator.operations.ChordOperations;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller("/chord")
+@RestController
+@RequestMapping("/chord")
 public class ChordController {
 
     @RequestMapping(value = "/get", method = RequestMethod.GET)
