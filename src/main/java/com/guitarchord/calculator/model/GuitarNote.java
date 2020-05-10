@@ -16,6 +16,10 @@ public class GuitarNote {
         this.string = string;
         this.fret = fret;
         this.muted = muted;
-        this.note = TabOperations.noteValue(string, fret);
+        if (! muted) {
+            this.note = TabOperations.noteValue(string, fret);
+        } else {
+            this.note = null;
+        }
     }
 }

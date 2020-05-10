@@ -45,33 +45,11 @@ public class TabOperations {
                 });
             }
         }
-        
-        
-        //TODO
-        //Build a tree of possible voicings.
-        //Each degree of the chord, starting from the degreeOfLowestNoteInChordInversion,
-        //becomes a node. From each node, there are a set of possible positions on the next
-        //string that satisfy one of the remaining notes in the chord.
-        //At each stage in the tree,
-        //1. If the open string satisfies one of the remaining notes in the chord, recurse.
-        //2. If any of the notes within two frets of the note on the lowest string 
-        //satisfies one of the remaining notes in the chord, recurse.
-        //3. Try to mark the note as muted -- we allow up to two muted notes in a path.
-        // This should carry some preference towards the fifth and, in 11s and 13s, the 9th, if possible.
-        // Some will be taken already if we decide not to start on the lowest string.
-        //4. If we are on the 5th string and there is a remaining chord degree required (5ths and 9ths optional)
-        //that the 6th can't satisfy, do not add this node. Return.
-        //5. If a node does not have any valid children, do not add it. Return.
-        //6. If all these conditions are satisfied by the node, add it and return.
-        //Assume only 4 strings can be engaged. Bar chords aren't interesting.
-
-        //Loop over the first three strings as the starting string, and each inversion on each.
-        
         return validVoicings;
     }
 
     private static void traverseTree(ChordNode parent, Chord chord, Set<GuitarChordTab> validVoicings) {
-        if (parent.getString().getOrdinal() == HIGHEST_GUITAR_STRING_ORDINAL) {
+        if (parent.getTab().isComplete()) {
             if (allDegreesSatisfied(chord, parent.getTab())) {
                 validVoicings.add(parent.getTab());
                 return;
@@ -94,7 +72,7 @@ public class TabOperations {
         Set<Note> unusedNotes = unusedNotes(chord, parent.getTab());
         if (unusedNotes.isEmpty()) {
             //Mute all remaining strings if we have discovered all notes.
-            GuitarChordTab updatedChordTab = parent.getTab();
+            GuitarChordTab updatedChordTab = new GuitarChordTab(parent.getTab());
             updatedChordTab.setGuitarNote(new GuitarNote(currentString, -1, true));
             ChordNode newNode = new ChordNode(updatedChordTab, currentString);
             buildTree(newNode, chord);
@@ -104,7 +82,7 @@ public class TabOperations {
         Note openStringNote = currentString.getTuning();
         if (unusedNotes.contains(openStringNote)) {
             GuitarNote guitarNote = new GuitarNote(currentString, 0, false);
-            GuitarChordTab updatedChordTab = parent.getTab();
+            GuitarChordTab updatedChordTab = new GuitarChordTab(parent.getTab());
             updatedChordTab.setGuitarNote(guitarNote);
             ChordNode newNode = new ChordNode(updatedChordTab, currentString);
             buildTree(newNode, chord);
@@ -113,7 +91,7 @@ public class TabOperations {
         Set<GuitarNote> matches = getMatchingNotesInFretRange(currentString, unusedNotes, getAvailableFretRange(parent.getTab()));
         if (matches.isEmpty()) {
             //2. If there are no matches on the next string, mute it and recurse.
-            GuitarChordTab updatedChordTab = parent.getTab();
+            GuitarChordTab updatedChordTab = new GuitarChordTab(parent.getTab());
             updatedChordTab.setGuitarNote(new GuitarNote(currentString, -1, true));
             ChordNode newNode = new ChordNode(updatedChordTab, currentString);
             buildTree(newNode, chord);
@@ -122,7 +100,7 @@ public class TabOperations {
             //3. If any of the notes within two frets of the note on the lowest string 
             //satisfies one of the remaining notes in the chord, recurse.
             matches.forEach(guitarNote -> {
-                GuitarChordTab updatedChordTab = parent.getTab();
+                GuitarChordTab updatedChordTab = new GuitarChordTab(parent.getTab());
                 updatedChordTab.setGuitarNote(guitarNote);
                 ChordNode newNode = new ChordNode(updatedChordTab, currentString);
                 buildTree(newNode, chord);

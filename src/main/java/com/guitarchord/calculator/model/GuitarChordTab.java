@@ -2,8 +2,9 @@ package com.guitarchord.calculator.model;
 
 import static com.guitarchord.calculator.operations.TabOperations.GUITAR_STRINGS;
 
-import javax.management.InvalidAttributeValueException;
+import java.util.Arrays;
 
+import javax.management.InvalidAttributeValueException;
 import lombok.Data;
 
 @Data
@@ -21,9 +22,20 @@ public class GuitarChordTab {
         setGuitarNote(bottomStringNote);
     }
 
+    public GuitarChordTab(GuitarChordTab copy) {
+        GuitarNote[] otherTabNotes = copy.getNotes();
+        for (int i = 0; i < 6; i++) {
+            this.notes[i] = otherTabNotes[i];
+        }
+    }
+
     public void setGuitarNote(GuitarNote guitarNote) {
         int index = guitarNote.getString().getOrdinal() - 1;
         notes[index] = guitarNote;
+    }
+
+    public boolean isComplete() {
+        return Arrays.stream(notes).allMatch(note -> {return null != note;});
     }
 
     public GuitarNote getLowestStringNote() throws InvalidAttributeValueException {
@@ -35,6 +47,16 @@ public class GuitarChordTab {
         throw new InvalidAttributeValueException("The first three strings we all muted");
     }
 
+    public GuitarNote getHighestStringNote() {
+        GuitarNote highest = notes[0];
+        for (int i = 1; i < 6; i++) {
+            if (null != notes[i] && ! notes[i].isMuted()) {
+                highest = notes[i];
+            }
+        }
+        return highest;
+    }
+
     public int getNumStringsEngaged() {
         int total = 0;
         for (int i = 0; i< notes.length; i++) {
@@ -44,5 +66,4 @@ public class GuitarChordTab {
         }
         return total;
     }
-
 }

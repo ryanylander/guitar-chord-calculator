@@ -8,18 +8,18 @@ import java.util.Set;
 
 public enum Note {
 
-    A(1), 
-    ASHARP(2), BFLAT(2),
-    B(3),
-    C(4), BSHARP(4), 
-    CSHARP(5), DFLAT(5),
-    D(6), 
-    DSHARP(7), EFLAT(7),
-    E(8), 
-    F(9), ESHARP(9), 
-    FSHARP(10), GFLAT(10),
-    G(11), 
-    GSHARP(12), AFLAT(12);
+    A(0), 
+    ASHARP(1), BFLAT(1),
+    B(2),
+    C(3), BSHARP(3), 
+    CSHARP(4), DFLAT(4),
+    D(5), 
+    DSHARP(6), EFLAT(6),
+    E(7), 
+    F(8), ESHARP(8), 
+    FSHARP(9), GFLAT(9),
+    G(10), 
+    GSHARP(11), AFLAT(11);
 
     private static Map<Integer, Set<Note>> map = new HashMap();
     static {
@@ -43,7 +43,7 @@ public enum Note {
     }
 
     public static Note valueOf(int residue) { //TODO these should support key-appropriate enharmonics
-        if (residue < 1 || residue > 12) {
+        if (residue < 0 || residue > 11) {
             throw new InvalidParameterException("There are only 12 notes in western music theory");
         }
         return map.get(residue).stream().findAny().orElse(null);

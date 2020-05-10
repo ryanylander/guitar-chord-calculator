@@ -1,5 +1,6 @@
 package com.guitarchord.calculator.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import com.guitarchord.calculator.model.GuitarStrings.GuitarString;
@@ -17,6 +18,7 @@ import lombok.Data;
     public ChordNode(GuitarChordTab guitarChordTab, GuitarString string) {
         this.tab = guitarChordTab;
         this.string = string;
+        this.children = new HashSet<ChordNode>();
     }
 
     public void addChild(ChordNode node) {
