@@ -161,6 +161,9 @@ public class ChordOperations {
             case DIMINISHED:
                 halfStepsAboveRoot = 6;
                 break;
+            case AUGMENTED:
+                halfStepsAboveRoot = 8;
+                break;
             default:
                 throw new UnsupportedOperationException("Unsupported quality found for degree: " + ChordDegree.FIFTH.name());
         }
