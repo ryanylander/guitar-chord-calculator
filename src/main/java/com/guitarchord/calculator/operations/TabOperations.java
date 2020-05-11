@@ -61,9 +61,13 @@ public class TabOperations {
     }
 
     private static void buildTree(ChordNode parent, Chord chord) {
-        
         int parentString = parent.getString().getOrdinal();
-        if (HIGHEST_GUITAR_STRING_ORDINAL == parentString || parent.getTab().getNumStringsEngaged() == 4) {
+        if (parent.getTab().getNumStringsEngaged() == 4) { //for now, we run out of fingers at 4.
+            //mute remaining strings
+            parent.setTab(muteRemainingStrings(parent.getTab()));
+            return;
+        }
+        if (HIGHEST_GUITAR_STRING_ORDINAL == parentString) {
             return; //todo check this
         }
         //Move to next string up
@@ -107,6 +111,19 @@ public class TabOperations {
                 parent.addChild(newNode);
             });
         }
+    }
+
+    private static GuitarChordTab muteRemainingStrings(GuitarChordTab tab) {
+        GuitarNote[] notes = tab.getNotes();
+        for (int i = 0; i < notes.length; i++) {
+            if (null == notes[i]) {
+                GuitarString string = GUITAR_STRINGS.getStringForOrdinal(i + 1);
+                GuitarNote mute = new GuitarNote(string, -1, true);
+                notes[i] = mute;
+            }
+        }
+        tab.setNotes(notes);
+        return tab;
     }
 
     private static Set<GuitarNote> getMatchingNotesInFretRange(GuitarString guitarString, Set<Note> unusedNotes, FretRange fretRange) {

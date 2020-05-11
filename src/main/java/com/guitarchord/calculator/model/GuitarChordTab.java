@@ -60,7 +60,7 @@ public class GuitarChordTab {
     public int getNumStringsEngaged() {
         int total = 0;
         for (int i = 0; i< notes.length; i++) {
-            if (! (null == notes[i]) && ! (notes[i].isMuted())) {
+            if (! (null == notes[i]) && ! (notes[i].isMuted()) && ! (notes[i].getFret() == 0)) {
                 total++;
             }
         }
