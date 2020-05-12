@@ -6,6 +6,7 @@ import java.util.Set;
 import com.guitarchord.calculator.model.Chord;
 import com.guitarchord.calculator.model.ChordQuality;
 import com.guitarchord.calculator.model.GuitarChordTab;
+import com.guitarchord.calculator.model.GuitarTabResponse;
 import com.guitarchord.calculator.model.Note;
 import com.guitarchord.calculator.operations.TabOperations;
 
@@ -23,7 +24,7 @@ public class GuitarController {
     private ChordController chordController;
 
     @RequestMapping(value = "/tab", method = RequestMethod.GET)
-    public @ResponseBody Set<GuitarChordTab> getChordTablature(Note root, ChordQuality chordQuality) {
+    public @ResponseBody GuitarTabResponse getChordTablature(Note root, ChordQuality chordQuality) {
         Set<GuitarChordTab> validTabs = new HashSet<>();
         Set<Chord> validInversions = chordController.getAllInversions(root, chordQuality);
 
@@ -32,7 +33,9 @@ public class GuitarController {
             validTabs.addAll(validVoicings);
         });
 
-        return validTabs;
+        GuitarTabResponse response = new GuitarTabResponse();
+        response.setValidTabs(validTabs);
+        return response;
     }
     
 }

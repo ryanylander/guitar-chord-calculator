@@ -74,43 +74,37 @@ public class TabOperations {
         int currentStringOrdinal = parentString + 1;
         GuitarString currentString = GUITAR_STRINGS.getStringForOrdinal(currentStringOrdinal);
         Set<Note> unusedNotes = unusedNotes(chord, parent.getTab());
-        if (unusedNotes.isEmpty()) {
-            //Mute all remaining strings if we have discovered all notes.
-            GuitarChordTab updatedChordTab = new GuitarChordTab(parent.getTab());
-            updatedChordTab.setGuitarNote(new GuitarNote(currentString, -1, true));
-            ChordNode newNode = new ChordNode(updatedChordTab, currentString);
-            buildTree(newNode, chord);
-            parent.addChild(newNode);
-        }
-        //1. If the open string satisfies one of the remaining notes in the chord, recurse.
-        Note openStringNote = currentString.getTuning();
-        if (unusedNotes.contains(openStringNote)) {
-            GuitarNote guitarNote = new GuitarNote(currentString, 0, false);
-            GuitarChordTab updatedChordTab = new GuitarChordTab(parent.getTab());
-            updatedChordTab.setGuitarNote(guitarNote);
-            ChordNode newNode = new ChordNode(updatedChordTab, currentString);
-            buildTree(newNode, chord);
-            parent.addChild(newNode);
-        }
-        Set<GuitarNote> matches = getMatchingNotesInFretRange(currentString, unusedNotes, getAvailableFretRange(parent.getTab()));
-        if (matches.isEmpty()) {
-            //2. If there are no matches on the next string, mute it and recurse.
-            GuitarChordTab updatedChordTab = new GuitarChordTab(parent.getTab());
-            updatedChordTab.setGuitarNote(new GuitarNote(currentString, -1, true));
-            ChordNode newNode = new ChordNode(updatedChordTab, currentString);
-            buildTree(newNode, chord);
-            parent.addChild(newNode);
-        } else {
-            //3. If any of the notes within two frets of the note on the lowest string 
-            //satisfies one of the remaining notes in the chord, recurse.
-            matches.forEach(guitarNote -> {
+        if (! unusedNotes.isEmpty()) {
+            //1. If the open string satisfies one of the remaining notes in the chord, recurse.
+            Note openStringNote = currentString.getTuning();
+            if (unusedNotes.contains(openStringNote)) {
+                GuitarNote guitarNote = new GuitarNote(currentString, 0, false);
                 GuitarChordTab updatedChordTab = new GuitarChordTab(parent.getTab());
                 updatedChordTab.setGuitarNote(guitarNote);
                 ChordNode newNode = new ChordNode(updatedChordTab, currentString);
                 buildTree(newNode, chord);
                 parent.addChild(newNode);
-            });
+            }
+            Set<GuitarNote> matches = getMatchingNotesInFretRange(currentString, unusedNotes, getAvailableFretRange(parent.getTab()));
+            if (! matches.isEmpty()) {
+                //2. If any of the notes within two frets of the note on the lowest string 
+                //satisfies one of the remaining notes in the chord, recurse.
+                matches.forEach(guitarNote -> {
+                    GuitarChordTab updatedChordTab = new GuitarChordTab(parent.getTab());
+                    updatedChordTab.setGuitarNote(guitarNote);
+                    ChordNode newNode = new ChordNode(updatedChordTab, currentString);
+                    buildTree(newNode, chord);
+                    parent.addChild(newNode);
+                });
+            }
         }
+        //3. Mute this string to see what potential shapes arise in its absence.
+        GuitarChordTab updatedChordTab = new GuitarChordTab(parent.getTab());
+        updatedChordTab.setGuitarNote(new GuitarNote(currentString, -1, true));
+        ChordNode newNode = new ChordNode(updatedChordTab, currentString);
+        buildTree(newNode, chord);
+        parent.addChild(newNode);
+        return;
     }
 
     private static GuitarChordTab muteRemainingStrings(GuitarChordTab tab) {
